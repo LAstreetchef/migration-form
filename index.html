@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WooCommerce to Shopify Migration - Client Intake Form</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --olive: #2d3a2d;
+      --olive-light: #3d4a3d;
+      --cream: #f5f0e6;
+      --cream-dark: #e8e0d0;
+      --orange: #e85c3a;
+      --orange-dark: #d04a2a;
+      --text-dark: #2d3a2d;
+      --text-light: #f5f0e6;
+    }
+
+    body {
+      font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--cream);
+      color: var(--text-dark);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    .header {
+      background: var(--olive);
+      color: var(--text-light);
+      padding: 60px 24px;
+      text-align: center;
+    }
+
+    .header__badge {
+      display: inline-block;
+      background: var(--orange);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 6px 16px;
+      border-radius: 50px;
+      margin-bottom: 20px;
+    }
+
+    .header__title {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .header__subtitle {
+      font-size: 1.0625rem;
+      opacity: 0.85;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Progress Bar */
+    .progress-container {
+      background: var(--olive);
+      padding: 0 24px 30px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .progress-bar {
+      max-width: 800px;
+      margin: 0 auto;
+      height: 6px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .progress-bar__fill {
+      height: 100%;
+      background: var(--orange);
+      width: 0%;
+      transition: width 0.3s ease;
+      border-radius: 3px;
+    }
+
+    .progress-text {
+      text-align: center;
+      color: rgba(255,255,255,0.7);
+      font-size: 0.8125rem;
+      margin-top: 10px;
+    }
+
+    /* Container */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    /* Sections */
+    .form-section {
+      background: white;
+      border-radius: 16px;
+      padding: 40px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 2px solid var(--cream);
+    }
+
+    .section-number {
+      width: 44px;
+      height: 44px;
+      background: var(--olive);
+      color: var(--text-light);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.125rem;
+      flex-shrink: 0;
+    }
+
+    .section-title h2 {
+      font-size: 1.375rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      color: var(--olive);
+    }
+
+    .section-title p {
+      font-size: 0.9375rem;
+      color: #666;
+    }
+
+    /* Form Elements */
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 600px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    label {
+      display: block;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--olive);
+      margin-bottom: 8px;
+    }
+
+    label .required {
+      color: var(--orange);
+    }
+
+    label .optional {
+      font-weight: 400;
+      color: #888;
+      font-size: 0.8125rem;
+      margin-left: 6px;
+    }
+
+    .help-text {
+      font-size: 0.8125rem;
+      color: #777;
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="url"],
+    input[type="number"],
+    input[type="tel"],
+    input[type="date"],
+    input[type="password"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 1rem;
+      font-family: inherit;
+      border: 2px solid var(--cream-dark);
+      border-radius: 10px;
+      background: white;
+      color: var(--text-dark);
+      transition: all 0.2s ease;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--olive);
+      box-shadow: 0 0 0 3px rgba(45, 58, 45, 0.1);
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: #aaa;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%232d3a2d' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+    }
+
+    /* Checkboxes & Radios */
+    .checkbox-group,
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .checkbox-item,
+    .radio-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .checkbox-item input,
+    .radio-item input {
+      width: 20px;
+      height: 20px;
+      margin-top: 2px;
+      cursor: pointer;
+      accent-color: var(--orange);
+      flex-shrink: 0;
+    }
+
+    .checkbox-label,
+    .radio-label {
+      font-size: 0.9375rem;
+      color: var(--text-dark);
+    }
+
+    .checkbox-label strong,
+    .radio-label strong {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .checkbox-label span {
+      font-size: 0.8125rem;
+      color: #666;
+    }
+
+    /* Info Boxes */
+    .info-box {
+      background: var(--cream);
+      border-left: 4px solid var(--orange);
+      border-radius: 0 10px 10px 0;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .info-box h4 {
+      font-size: 0.9375rem;
+      font-weight: 700;
+      color: var(--olive);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .info-box p,
+    .info-box ul {
+      font-size: 0.875rem;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .info-box ul {
+      margin-left: 20px;
+      margin-top: 8px;
+    }
+
+    .info-box li {
+      margin-bottom: 4px;
+    }
+
+    /* Warning Box */
+    .warning-box {
+      background: #fff8f6;
+      border: 1px solid #ffd4cc;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .warning-box h4 {
+      font-size: 0.9375rem;
+      font-weight: 700;
+      color: var(--orange);
+      margin-bottom: 8px;
+    }
+
+    .warning-box p {
+      font-size: 0.875rem;
+      color: #666;
+    }
+
+    /* Divider */
+    .divider {
+      height: 1px;
+      background: var(--cream);
+      margin: 32px 0;
+    }
+
+    /* Submit Section */
+    .submit-section {
+      background: var(--olive);
+      border-radius: 16px;
+      padding: 48px 40px;
+      text-align: center;
+      color: var(--text-light);
+    }
+
+    .submit-section h3 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .submit-section p {
+      opacity: 0.8;
+      margin-bottom: 32px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .submit-btn {
+      background: var(--orange);
+      color: white;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 18px 48px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .submit-btn:hover {
+      background: var(--orange-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(232, 92, 58, 0.3);
+    }
+
+    .submit-note {
+      font-size: 0.8125rem;
+      opacity: 0.6;
+      margin-top: 20px;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .form-section {
+        padding: 28px 20px;
+      }
+
+      .section-header {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .submit-section {
+        padding: 36px 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <span class="header__badge">Migration Intake Form</span>
+    <h1 class="header__title">WooCommerce to Shopify</h1>
+    <p class="header__subtitle">Please complete this form with as much detail as possible. This information helps us ensure a smooth migration with no data loss or downtime.</p>
+  </header>
+
+  <div class="progress-container">
+    <div class="progress-bar">
+      <div class="progress-bar__fill" id="progressFill"></div>
+    </div>
+    <p class="progress-text"><span id="progressPercent">0</span>% complete</p>
+  </div>
+
+  <div class="container">
+    <form id="migrationForm">
+      
+      <!-- Section 1: Business Information -->
+      <div class="form-section">
+        <div class="section-header">
+          <div class="section-number">1</div>
+          <div class="section-title">
+            <h2>Business Information</h2>
+            <p>Tell us about your business and main contact</p>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Business Name <span class="required">*</span></label>
+            <input type="text" name="business_name" required placeholder="Your Company LLC">
+          </div>
+          <div class="form-group">
+            <label>Contact Name <span class="required">*</span></label>
+            <input type="text" name="contact_name" required placeholder="John Smith">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Email Address <span class="required">*</span></label>
+            <input type="email" name="email" required placeholder="john@company.com">
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" name="phone" placeholder="(555) 123-4567">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Current Website URL <span class="required">*</span></label>
+          <input type="url" name="current_url" required placeholder="https://yourstore.com">
+        </div>
+
+        <div class="form-group">
+          <label>Brief Business Description</label>
+          <textarea name="business_description" placeholder="What do you sell? Who is your target customer? What makes your business unique?"></textarea>
+        </div>
+      </div>
+
+      <!-- Section 2: Current WooCommerce Setup -->
+      <div class="form-section">
+        <div class="section-header">
+          <div class="section-number">2</div>
+          <div class="section-title">
+            <h2>Current WooCommerce Setup</h2>
+            <p>Details about your existing store configuration</p>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>WooCommerce Version</label>
+            <input type="text" name="woo_version" placeholder="e.g., 8.2.1">
+            <p class="help-text">Found in WooCommerce → Status</p>
+          </div>
+          <div class="form-group">
+            <label>WordPress Version</label>
+            <input type="text" name="wp_version" placeholder="e.g., 6.4.2">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Current Theme</label>
+          <input type="text" name="current_theme" placeholder="e.g., Divi, Astra, Flatsome, Custom Theme">
+        </div>
+
+        <div class="form-group">
+          <label>Active Plugins <span class="required">*</span></label>
+          <textarea name="active_plugins" required placeholder="List all active plugins, especially:
+• Payment gateways (Stripe, PayPal)
+• Shipping (ShipStation, UPS)
+• Subscriptions
+• Email marketing (Klaviyo, Mailchimp)
+• Reviews
+• SEO (Yoast, RankMath)
+• Page builders (Elementor, Divi)"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Custom Functionality</label>
+          <textarea name="custom_functionality" placeholder="Describe any custom code, shortcodes, or special features..."></textarea>
+        </div>
+      </div>
+
+      <!-- Section 3: Product Information -->
+      <div class="form-section">
+        <div class="section-header">
+          <div class="section-number">3</div>
+          <div class="section-title">
+            <h2>Product Information</h2>
+            <p>Details about your product catalog</p>
+          </div>
+        </div>
+
+        <div class="info-box">
+          <h4>📦 What Gets Migrated</h4>
+          <p>We'll transfer all product data including titles, descriptions, images, prices, variants, SKUs, inventory levels, and SEO metadata.</p>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Total Number of Products <span class="required">*</span></label>
+            <input type="number" name="product_count" required placeholder="e.g., 150">
+          </div>
+          <div class="form-group">
+            <label>Total Number of Variants</label>
+            <input type="number" name="variant_count" placeholder="e.g., 500">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Product Types <span class="required">*</span></label>
+          <div class="checkbox-group">
+            <label class="checkbox-item">
+              <input type="checkbox" name="product_types" value="simple">
+              <span class="checkbox-label"><strong>Simple Products</strong><span>Single items without variations</span></span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="product_types" value="variable">
+              <span class="checkbox-label"><strong>Variable Products</strong><span>Products with size/color options</span></span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="product_types" value="subscription">
+              <span class="checkbox-label"><strong>Subscription Products</strong><span>Recurring billing products</span></span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="product_types" value="digital">
+              <span class="checkbox-label"><strong>Digital/Downloadable</strong><span>Files, ebooks, software</span></span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="product_types" value="bundle">
+              <span class="checkbox-label"><strong>Bundled Products</strong><span>Product bundles or kits</span></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Number of Categories</label>
+            <input type="number" name="category_count" placeholder="e.g., 12">
+          </div>
+          <div class="form-group">
+            <label>Number of Tags</label>
+            <input type="number" name="tag_count" placeholder="e.g., 50">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Custom Product Fields</label>
+          <textarea name="custom_fields" placeholder="List any custom fields (e.g., Ingredients, Nutritional Info, Specifications)..."></textarea>
+          <p class="help-text">These will be migrated as Shopify metafields</p>
+        </div>
+      </div>
+
+      <!-- Section 4: Customer & Order Data -->
+      <div class="form-section">
+        <div class="section-header">
+          <div class="section-number">4</div>
+          <div class="section-title">
+            <h2>Customer & Order Data</h2>
+            <p>Historical data to migrate</p>
+          </div>
+        </div>
+
+        <div class="warning-box">
+          <h4>⚠️ Customer Passwords</h4>
+          <p>Passwords cannot be migrated between platforms. Customers will need to use "Forgot Password" after migration.</p>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Total Customers <span class="required">*</span></label>
+            <input type="number" name="customer_count" required placeholder="e.g., 5,000">
+          </div>
+          <div class="form-group">
+            <label>Total Orders <span class="required">*</span></label>
+            <input type="number" name="order_count" required placeholder="e.g., 12,000">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>What data should be migrated? <span class="required">*</span></label>
+          <div class="checkbox-group">
+            <label class="checkbox-item">
+              <input type="checkbox" name="migrate_data" value="customers" checked>
+              <span class="checkbox-label">Customer accounts (name, email, addresses)</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="migrate_data" value="orders" checked>
+              <span class="checkbox-label">Order history</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="migrate_data" value="reviews">
+              <span class="checkbox-label">Product reviews</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="migrate_data" value="coupons">
+              <span class="checkbox-label">Coupons & discount codes</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="migrate_data" value="blog">
+              <span class="checkbox-label">Blog posts</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Order History Scope</label>
+          <div class="radio-group">
+            <label class="radio-item">
+              <input type="radio" name="order_scope" value="all">
+              <span class="radio-label">All historical orders</span>
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="order_scope" value="recent">
+              <span class="radio-label">Last 12 months only</span>
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="order_scope" value="none">
+              <span class="radio-label">Fresh start (no order history)</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 5: Subscriptions -->
+      <div class="form-section">
+        <div class="section-header">
+          <div class="section-number">5</div>
+          <div class="section-title">
+            <h2>Subscriptions</h2>
+            <p>Recurring payment products</p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Do you have active subscriptions? <span class="required">*</span></label>
+          <div class="radio-group">
+            <label class="radio-item">
+              <input type="radio" name="has_subscriptions" value="yes" id="subYes">
+              <span class="radio-label">Yes</span>
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="has_subscriptions" value="no" id="subNo">
+              <span class="radio-label">No</span>
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="has_subscriptions" value="planned">
+              <span class="radio-label">No, but planning to add on Shopify</span>
+            </label>
+          </div>
+        </div>
+
+        <div id="subscriptionDetails" style="display: none;">
+          <div class="divider"></div>
+
+          <div class="form-group">
+            <label>Current Subscription Plugin</label>
+            <input type="text" name="subscription_plugin" placeholder="e.g., WooCommerce Subscriptions">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Active Subscriptions</label>
+              <input type="number" name="active_subs" placeholder="e.g., 250">
+            </div>
+            <div class="form-group">
+              <label>Monthly Recurring Revenue</label>
+              <input type="text" name="mrr" placeholder="e.g., $5,000">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Billing Cycles Used</label>
+            <div class="checkbox-group">
+              <label class="checkbox-item">
+                <input type="checkbox" name="billing_cycles" value="weekly">
+                <span class="checkbox-label">Weekly</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" name="billing_cycles" value="monthly">
+                <span class="checkbox-label">Monthly</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" name="billing_cycles" value="quarterly">
+                <span class="checkbox-label">Quarterly</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" name="billing_cycles" value="annually">
+                <span class="checkbox-label">Annually</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="info-box">
+            <h4>📋 Subscription Migration</h4>
+            <p>We'll use Recharge or Shopify Subscriptions. Active subscribers will need payment methods re-authorized—we'll coordinate this to minimize churn.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 6: Payments & Shipping -->
+      <div class="form-section">
+        <div class="section-header">
+          <div class="section-number">6</div>
+          <div class="section-title">
+            <h2>Payments & Shipping</h2>
+            <p>Payment gateways and shipping setup</p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Payment Gateways <span class="required">*</span></label>
+          <div class="checkbox-group">
+            <label class="checkbox-item">
+              <input type="checkbox" name="payments" value="stripe">
+              <span class="checkbox-label">Stripe</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="payments" value="paypal">
+              <span class="checkbox-label">PayPal</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="payments" value="square">
+              <span class="checkbox-label">Square</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="payments" value="bnpl">
+              <span class="checkbox-label">Affirm / Klarna / Afterpay</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="payments" value="other">
+              <span class="checkbox-label">Other (specify below)</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Other Payment Methods</label>
+          <input type="text" name="other_payments" placeholder="e.g., Amazon Pay, Apple Pay...">
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="form-group">
+          <label>Shipping Methods <span class="required">*</span></label>
+          <div class="checkbox-group">
+            <label class="checkbox-item">
+              <input type="checkbox" name="shipping" value="flat">
+              <span class="checkbox-label">Flat rate shipping</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="shipping" value="free">
+              <span class="checkbox-label">Free shipping (with threshold)</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="shipping" value="calculated">
+              <span class="checkbox-label">Real-time carrier rates</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="shipping" value="local">
+              <span class="checkbox-label">Local pickup/delivery</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="shipping" value="international">
+              <span class="checkbox-label">International shipping</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Shipping/Fulfillment Software</label>
+          <input type="text" name="shipping_software" placeholder="e.g., ShipStation, Shippo, ShipBob...">
+        </div>
+
+        <div class="form-group">
+          <label>Free Shipping Threshold</label>
+          <input type="text" name="free_threshold" placeholder="e.g., Orders over $50">
+        </div>
+      </div>
+
+      <!-- Section 7: Design Requirements -->
+      <div class="form-section">
+        <div class="section-header">
+          <div class="section-number">7</div>
+          <div class="section-title">
+            <h2>Design Requirements</h2>
+            <p>Look and feel for your new store</p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Design Approach <span class="required">*</span></label>
+          <div class="radio-group">
+            <label class="radio-item">
+              <input type="radio" name="design_approach" value="replicate">
+              <span class="radio-label"><strong>Replicate current design</strong> — Match existing WooCommerce look</span>
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="design_approach" value="refresh">
+              <span class="radio-label"><strong>Design refresh</strong> — Keep the feel but modernize</span>
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="design_approach" value="redesign">
+              <span class="radio-label"><strong>Full redesign</strong> — New look and feel</span>
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="design_approach" value="theme">
+              <span class="radio-label"><strong>Shopify theme</strong> — Start from a pre-built theme</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Design References <span class="optional">(optional)</span></label>
+          <textarea name="design_refs" placeholder="Links to websites you like, Shopify themes, or design files..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Critical Features to Maintain</label>
+          <textarea name="critical_features" placeholder="List must-have features:
+• Product quick view
+• Size guides
+• Wishlists
+• Product bundles
+• Loyalty program
+• etc."></textarea>
+        </div>
+      </div>
+
+      <!-- Section 8: SEO & Marketing -->
+      <div class="form-section">
+        <div class="section-header">
+          <div class="section-number">8</div>
+          <div class="section-title">
+            <h2>SEO & Marketing</h2>
+            <p>Preserve rankings and reconnect tools</p>
+          </div>
+        </div>
+
+        <div class="info-box">
+          <h4>🔍 SEO Migration</h4>
+          <p>We'll set up 301 redirects to preserve your search rankings. Some URL structures change on Shopify, so redirects are essential.</p>
+        </div>
+
+        <div class="form-group">
+          <label>SEO Importance <span class="required">*</span></label>
+          <div class="radio-group">
+            <label class="radio-item">
+              <input type="radio" name="seo_importance" value="critical">
+              <span class="radio-label"><strong>Critical</strong> — Organic is our main traffic source</span>
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="seo_importance" value="important">
+              <span class="radio-label"><strong>Important</strong> — Significant organic traffic</span>
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="seo_importance" value="moderate">
+              <span class="radio-label"><strong>Moderate</strong> — Some organic, not primary</span>
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="seo_importance" value="low">
+              <span class="radio-label"><strong>Low</strong> — Mostly paid/social traffic</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Email Marketing Platform <span class="required">*</span></label>
+          <select name="email_platform">
+            <option value="">Select platform</option>
+            <option value="klaviyo">Klaviyo</option>
+            <option value="mailchimp">Mailchimp</option>
+            <option value="omnisend">Omnisend</option>
+            <option value="drip">Drip</option>
+            <option value="hubspot">HubSpot</option>
+            <option value="other">Other</option>
+            <option value="none">None</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Marketing Integrations</label>
+          <div class="checkbox-group">
+            <label class="checkbox-item">
+              <input type="checkbox" name="marketing" value="ga4">
+              <span class="checkbox-label">Google Analytics (GA4)</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="marketing" value="google_ads">
+              <span class="checkbox-label">Google Ads / Shopping</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="marketing" value="facebook">
+              <span class="checkbox-label">Facebook / Meta Pixel</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="marketing" value="tiktok">
+              <span class="checkbox-label">TikTok Pixel</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="marketing" value="sms">
+              <span class="checkbox-label">SMS (Postscript, Attentive)</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="marketing" value="reviews">
+              <span class="checkbox-label">Reviews (Judge.me, Yotpo)</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 9: Timeline & Budget -->
+      <div class="form-section">
+        <div class="section-header">
+          <div class="section-number">9</div>
+          <div class="section-title">
+            <h2>Timeline & Budget</h2>
+            <p>Project expectations</p>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Desired Go-Live Date <span class="required">*</span></label>
+            <input type="date" name="go_live_date" required>
+            <p class="help-text">Typical migration: 2-4 weeks</p>
+          </div>
+          <div class="form-group">
+            <label>Date Flexibility</label>
+            <select name="date_flex">
+              <option value="">Select</option>
+              <option value="flexible">Flexible</option>
+              <option value="somewhat">Somewhat (±2 weeks)</option>
+              <option value="fixed">Fixed deadline</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Why are you migrating?</label>
+          <textarea name="migration_reason" placeholder="What's driving the move to Shopify?"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Budget Range</label>
+          <select name="budget">
+            <option value="">Select range</option>
+            <option value="under_2500">Under $2,500</option>
+            <option value="2500_5000">$2,500 - $5,000</option>
+            <option value="5000_10000">$5,000 - $10,000</option>
+            <option value="10000_plus">$10,000+</option>
+            <option value="discuss">Prefer to discuss</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Do you have a Shopify account?</label>
+          <div class="radio-group">
+            <label class="radio-item">
+              <input type="radio" name="has_shopify" value="yes">
+              <span class="radio-label">Yes, already set up</span>
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="has_shopify" value="trial">
+              <span class="radio-label">Yes, on free trial</span>
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="has_shopify" value="no">
+              <span class="radio-label">No, need to create one</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 10: Access -->
+      <div class="form-section">
+        <div class="section-header">
+          <div class="section-number">10</div>
+          <div class="section-title">
+            <h2>Access & Files</h2>
+            <p>What we'll need from you</p>
+          </div>
+        </div>
+
+        <div class="warning-box">
+          <h4>🔐 Secure Access</h4>
+          <p>We recommend creating temporary admin accounts. All access will be removed upon project completion.</p>
+        </div>
+
+        <div class="form-group">
+          <label>Can you provide these?</label>
+          <div class="checkbox-group">
+            <label class="checkbox-item">
+              <input type="checkbox" name="access" value="wp_admin">
+              <span class="checkbox-label">WordPress admin access</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="access" value="hosting">
+              <span class="checkbox-label">Hosting/cPanel access</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="access" value="domain">
+              <span class="checkbox-label">Domain registrar access</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="access" value="email_platform">
+              <span class="checkbox-label">Email platform access</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="access" value="payment">
+              <span class="checkbox-label">Payment gateway admin</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Domain Registrar</label>
+            <input type="text" name="domain_registrar" placeholder="e.g., GoDaddy, Namecheap">
+          </div>
+          <div class="form-group">
+            <label>Current Hosting Provider</label>
+            <input type="text" name="hosting_provider" placeholder="e.g., SiteGround, WP Engine">
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 11: Additional Notes -->
+      <div class="form-section">
+        <div class="section-header">
+          <div class="section-number">11</div>
+          <div class="section-title">
+            <h2>Additional Notes</h2>
+            <p>Anything else we should know</p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Biggest Concerns</label>
+          <textarea name="concerns" placeholder="What are your biggest concerns about this migration?"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Anything Else?</label>
+          <textarea name="additional_notes" placeholder="Any other information that would help us..."></textarea>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <div class="submit-section">
+        <h3>Ready to Migrate?</h3>
+        <p>We'll review your information and reach out within 1-2 business days with a detailed migration plan and quote.</p>
+        <button type="submit" class="submit-btn">Submit Migration Request</button>
+        <p class="submit-note">Your information is secure and confidential.</p>
+      </div>
+
+    </form>
+  </div>
+
+  <script>
+    // Progress tracking
+    const form = document.getElementById('migrationForm');
+    const progressFill = document.getElementById('progressFill');
+    const progressPercent = document.getElementById('progressPercent');
+    const requiredInputs = form.querySelectorAll('[required]');
+    const allInputs = form.querySelectorAll('input, textarea, select');
+
+    function updateProgress() {
+      let filled = 0;
+      requiredInputs.forEach(input => {
+        if (input.type === 'checkbox' || input.type === 'radio') {
+          const name = input.name;
+          const checked = form.querySelector(`input[name="${name}"]:checked`);
+          if (checked) filled++;
+        } else if (input.value.trim() !== '') {
+          filled++;
+        }
+      });
+      const percent = Math.round((filled / requiredInputs.length) * 100);
+      progressFill.style.width = percent + '%';
+      progressPercent.textContent = percent;
+    }
+
+    allInputs.forEach(input => {
+      input.addEventListener('input', updateProgress);
+      input.addEventListener('change', updateProgress);
+    });
+
+    // Toggle subscription details
+    document.querySelectorAll('input[name="has_subscriptions"]').forEach(radio => {
+      radio.addEventListener('change', function() {
+        document.getElementById('subscriptionDetails').style.display = 
+          this.value === 'yes' ? 'block' : 'none';
+      });
+    });
+
+    // Form submission
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(form);
+      const data = {};
+      formData.forEach((value, key) => {
+        if (data[key]) {
+          if (Array.isArray(data[key])) {
+            data[key].push(value);
+          } else {
+            data[key] = [data[key], value];
+          }
+        } else {
+          data[key] = value;
+        }
+      });
+      
+      console.log('Migration Form Data:', data);
+      alert('✅ Migration request submitted!\n\nWe\'ll review and reach out within 1-2 business days.');
+    });
+
+    // Initialize
+    updateProgress();
+  </script>
+</body>
+</html>
