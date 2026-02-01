@@ -436,7 +436,7 @@
   </div>
 
   <div class="container">
-    <form id="migrationForm">
+    <form id="migrationForm" action="https://formspree.io/f/xgozwgaa" method="POST">
       
       <!-- Section 1: Business Information -->
       <div class="form-section">
@@ -1141,7 +1141,7 @@
 
     // Form submission
     form.addEventListener('submit', function(e) {
-      e.preventDefault();
+      // Submit to Formspree
       
       const formData = new FormData(form);
       const data = {};
@@ -1157,8 +1157,8 @@
         }
       });
       
-      console.log('Migration Form Data:', data);
-      alert('✅ Migration request submitted!\n\nWe\'ll review and reach out within 1-2 business days.');
+      
+      // Form submits to Formspree automatically
     });
 
     // Initialize
